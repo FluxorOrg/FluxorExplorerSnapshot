@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "AnyCodable",
+        "repositoryURL": "https://github.com/Flight-School/AnyCodable",
+        "state": {
+          "branch": null,
+          "revision": "6e9610258e9f1044b5e0d88545052846448b43c3",
+          "version": "0.2.3"
+        }
+      },
+      {
+        "package": "Fluxor",
+        "repositoryURL": "https://github.com/mortengregersen/fluxor",
+        "state": {
+          "branch": null,
+          "revision": "404f623ffc9be0c662fe80a7f3c0ea6777332f9c",
+          "version": "0.1.0-beta"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
