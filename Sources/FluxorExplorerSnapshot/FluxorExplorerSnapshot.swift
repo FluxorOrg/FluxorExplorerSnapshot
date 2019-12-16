@@ -5,12 +5,13 @@ import Foundation
 public struct FluxorExplorerSnapshot<State: Encodable>: Encodable, Equatable {
     public let action: Action
     public let newState: State
-    internal var date = Date()
+    public internal(set) var date: Date
     private var actionData: ActionData { .init(name: String(describing: action), payload: action.encodablePayload) }
 
     public init(action: Action, newState: State) {
         self.action = action
         self.newState = newState
+        self.date = Date()
     }
 
     public func encode(to encoder: Encoder) throws {
