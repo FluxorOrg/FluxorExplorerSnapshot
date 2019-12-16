@@ -17,7 +17,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/mortengregersen/fluxor",
-            from: "0.1.0-beta"),
+            .branch("master")),
     ],
     targets: [
         .target(
