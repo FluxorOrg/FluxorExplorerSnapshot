@@ -2,7 +2,7 @@ import AnyCodable
 import Fluxor
 import Foundation
 
-public struct FluxorExplorerSnapshot<State: Codable>: Encodable, Equatable {
+public struct FluxorExplorerSnapshot<State: Codable>: Codable, Equatable {
     public let actionData: ActionData
     public let newState: [String: AnyCodable]
     public internal(set) var date: Date
@@ -14,16 +14,9 @@ public struct FluxorExplorerSnapshot<State: Codable>: Encodable, Equatable {
         self.date = Date()
     }
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(date, forKey: .date)
-        try container.encode(actionData, forKey: .action)
-        try container.encode(newState, forKey: .newState)
-    }
-
     enum CodingKeys: String, CodingKey {
         case date
-        case action
+        case actionData = "action"
         case newState
     }
 
@@ -33,15 +26,7 @@ public struct FluxorExplorerSnapshot<State: Codable>: Encodable, Equatable {
 
         init(name: String, payload: [String: AnyEncodable]?) {
             self.name = name
-            if let payload = payload {
-                var codablePayload = [String: AnyCodable]()
-                payload.forEach { key, value in
-                    codablePayload[key] = AnyCodable(value.value)
-                }
-                self.payload = codablePayload
-            } else {
-                self.payload = nil
-            }
+            self.payload = payload?.mapValues { AnyCodable($0.value) }
         }
     }
 }
