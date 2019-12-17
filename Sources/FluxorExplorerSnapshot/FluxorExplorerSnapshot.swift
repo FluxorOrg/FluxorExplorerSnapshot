@@ -2,15 +2,15 @@ import AnyCodable
 import Fluxor
 import Foundation
 
-public struct FluxorExplorerSnapshot<State: Encodable>: Encodable, Equatable {
-    public let action: Action
-    public let newState: State
+public struct FluxorExplorerSnapshot<State: Codable>: Encodable, Equatable {
+    public let actionData: ActionData
+    public let newState: [String: AnyCodable]
     public internal(set) var date: Date
-    private var actionData: ActionData { .init(name: String(describing: action), payload: action.encodablePayload) }
 
     public init(action: Action, newState: State) {
-        self.action = action
-        self.newState = newState
+        self.actionData = .init(name: String(describing: type(of: action)), payload: action.encodablePayload)
+        let encodedState = try! JSONEncoder().encode(newState)
+        self.newState = try! JSONDecoder().decode([String: AnyCodable].self, from: encodedState)
         self.date = Date()
     }
 
@@ -27,14 +27,8 @@ public struct FluxorExplorerSnapshot<State: Encodable>: Encodable, Equatable {
         case newState
     }
 
-    private struct ActionData: Encodable, Equatable {
+    public struct ActionData: Encodable, Equatable {
         let name: String
         let payload: [String: AnyEncodable]?
-    }
-
-    public static func ==(lhs: FluxorExplorerSnapshot, rhs: FluxorExplorerSnapshot) -> Bool {
-        let lhsData = try? JSONEncoder().encode(lhs)
-        let rhsData = try? JSONEncoder().encode(rhs)
-        return lhsData == rhsData
     }
 }
