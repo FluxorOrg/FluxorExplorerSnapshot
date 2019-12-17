@@ -27,8 +27,21 @@ public struct FluxorExplorerSnapshot<State: Codable>: Encodable, Equatable {
         case newState
     }
 
-    public struct ActionData: Encodable, Equatable {
+    public struct ActionData: Codable, Equatable {
         let name: String
-        let payload: [String: AnyEncodable]?
+        let payload: [String: AnyCodable]?
+
+        init(name: String, payload: [String: AnyEncodable]?) {
+            self.name = name
+            if let payload = payload {
+                var codablePayload = [String: AnyCodable]()
+                payload.forEach { key, value in
+                    codablePayload[key] = AnyCodable(value.value)
+                }
+                self.payload = codablePayload
+            } else {
+                self.payload = nil
+            }
+        }
     }
 }
