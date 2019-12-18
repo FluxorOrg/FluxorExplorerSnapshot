@@ -2,38 +2,31 @@ import AnyCodable
 import Fluxor
 import Foundation
 
-public struct FluxorExplorerSnapshot<State: Encodable>: Encodable, Equatable {
-    public let action: Action
-    public let newState: State
-    internal var date = Date()
-    private var actionData: ActionData { .init(name: String(describing: action), payload: action.encodablePayload) }
+public struct FluxorExplorerSnapshot: Codable, Equatable {
+    public let actionData: ActionData
+    public let newState: [String: AnyCodable]
+    public internal(set) var date: Date
 
-    public init(action: Action, newState: State) {
-        self.action = action
-        self.newState = newState
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(date, forKey: .date)
-        try container.encode(actionData, forKey: .action)
-        try container.encode(newState, forKey: .newState)
+    public init<State: Encodable>(action: Action, newState: State, date: Date = .init()) {
+        self.actionData = .init(name: String(describing: type(of: action)), payload: action.encodablePayload)
+        let encodedState = try! JSONEncoder().encode(newState)
+        self.newState = try! JSONDecoder().decode([String: AnyCodable].self, from: encodedState)
+        self.date = date
     }
 
     enum CodingKeys: String, CodingKey {
         case date
-        case action
+        case actionData = "action"
         case newState
     }
 
-    private struct ActionData: Encodable, Equatable {
+    public struct ActionData: Codable, Equatable {
         let name: String
-        let payload: [String: AnyEncodable]?
-    }
+        let payload: [String: AnyCodable]?
 
-    public static func ==(lhs: FluxorExplorerSnapshot, rhs: FluxorExplorerSnapshot) -> Bool {
-        let lhsData = try? JSONEncoder().encode(lhs)
-        let rhsData = try? JSONEncoder().encode(rhs)
-        return lhsData == rhsData
+        init(name: String, payload: [String: AnyEncodable]?) {
+            self.name = name
+            self.payload = payload?.mapValues { AnyCodable($0.value) }
+        }
     }
 }
