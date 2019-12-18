@@ -7,11 +7,11 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
     public let newState: [String: AnyCodable]
     public internal(set) var date: Date
 
-    public init<State: Encodable>(action: Action, newState: State) {
+    public init<State: Encodable>(action: Action, newState: State, date: Date = .init()) {
         self.actionData = .init(name: String(describing: type(of: action)), payload: action.encodablePayload)
         let encodedState = try! JSONEncoder().encode(newState)
         self.newState = try! JSONDecoder().decode([String: AnyCodable].self, from: encodedState)
-        self.date = Date()
+        self.date = date
     }
 
     enum CodingKeys: String, CodingKey {
