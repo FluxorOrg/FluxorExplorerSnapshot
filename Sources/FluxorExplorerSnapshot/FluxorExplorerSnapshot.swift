@@ -21,8 +21,8 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
     }
 
     public struct ActionData: Codable, Equatable {
-        let name: String
-        let payload: [String: AnyCodable]?
+        public let name: String
+        public let payload: [String: AnyCodable]?
 
         init(name: String, payload: [String: AnyEncodable]?) {
             self.name = name
