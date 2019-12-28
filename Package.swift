@@ -17,12 +17,17 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/mortengregersen/fluxor",
-            .branch("master")),
+            .branch("master")
+        ),
+        .package(
+            url: "https://github.com/Flight-School/AnyCodable",
+            from: "0.2.3"
+        ),
     ],
     targets: [
         .target(
             name: "FluxorExplorerSnapshot",
-            dependencies: ["Fluxor"]),
+            dependencies: ["Fluxor", "AnyCodable"]),
         .testTarget(
             name: "FluxorExplorerSnapshotTests",
             dependencies: ["FluxorExplorerSnapshot"]),

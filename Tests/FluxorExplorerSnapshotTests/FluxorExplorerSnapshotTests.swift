@@ -61,12 +61,10 @@ final class FluxorExplorerSnapshotTests: XCTestCase {
 
 struct TestAction: Action {
     let increment: Int
-    var encodablePayload: [String: AnyEncodable]? {
-        ["increment": AnyEncodable(increment)]
-    }
 }
 
 struct OtherTestAction: Action {}
+
 struct State: Encodable {
     var count = 42
 }
