@@ -1,5 +1,4 @@
 import AnyCodable
-import Fluxor
 import Foundation
 
 public struct FluxorExplorerSnapshot: Codable, Equatable {
@@ -8,11 +7,11 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
     public let newState: [String: AnyCodable]
     public internal(set) var date: Date
 
-    public init<A: Action, State: Encodable>(action: A, oldState: State, newState: State) {
+    public init<A: Encodable, State: Encodable>(action: A, oldState: State, newState: State) {
         self.init(action: action, oldState: oldState, newState: newState, date: .init())
     }
 
-    internal init<A: Action, State: Encodable>(action: A, oldState: State, newState: State, date: Date) {
+    internal init<A: Encodable, State: Encodable>(action: A, oldState: State, newState: State, date: Date) {
         let encoder = JSONEncoder()
         let decoder = JSONDecoder()
         let encodedAction = try! encoder.encode(action)
