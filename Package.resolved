@@ -12,10 +12,10 @@
       },
       {
         "package": "Fluxor",
-        "repositoryURL": "https://github.com/mortengregersen/fluxor",
+        "repositoryURL": "https://github.com/MortenGregersen/Fluxor",
         "state": {
           "branch": "master",
-          "revision": "7683f79e9cba2a1ef5422922087303ee2aa23fda",
+          "revision": "d155ccadd6595d55bcbe56061c1a13004eee92d4",
           "version": null
         }
       }
