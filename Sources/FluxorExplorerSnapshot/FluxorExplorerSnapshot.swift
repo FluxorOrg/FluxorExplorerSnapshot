@@ -1,4 +1,5 @@
 import AnyCodable
+import Fluxor
 import Foundation
 
 public struct FluxorExplorerSnapshot: Codable, Equatable {
@@ -7,16 +8,14 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
     public let newState: [String: AnyCodable]
     public internal(set) var date: Date
 
-    public init<A: Encodable, State: Encodable>(action: A, oldState: State, newState: State) {
+    public init<State: Encodable>(action: Action, oldState: State, newState: State) {
         self.init(action: action, oldState: oldState, newState: newState, date: .init())
     }
 
-    internal init<A: Encodable, State: Encodable>(action: A, oldState: State, newState: State, date: Date) {
+    internal init<State: Encodable>(action: Action, oldState: State, newState: State, date: Date) {
+        actionData = .init(action)
         let encoder = JSONEncoder()
         let decoder = JSONDecoder()
-        let encodedAction = try! encoder.encode(action)
-        let actionPayload = try! decoder.decode([String: AnyCodable].self, from: encodedAction)
-        self.actionData = .init(name: String(describing: type(of: action)), payload: actionPayload)
         let encodedOldState = try! encoder.encode(oldState)
         self.oldState = try! decoder.decode([String: AnyCodable].self, from: encodedOldState)
         let encodedNewState = try! encoder.encode(newState)
@@ -34,5 +33,17 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
     public struct ActionData: Codable, Equatable {
         public let name: String
         public let payload: [String: AnyCodable]?
+
+        public init(_ action: Action) {
+            name = String(describing: type(of: action))
+            if let encodedAction = action.encode(with: JSONEncoder()),
+                let decodedPayload = try? JSONDecoder().decode([String: AnyCodable].self, from: encodedAction),
+                decodedPayload.count > 0 {
+                payload = decodedPayload
+            }
+            else {
+                payload = nil
+            }
+        }
     }
 }

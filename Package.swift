@@ -16,13 +16,11 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/mortengregersen/fluxor",
-            .branch("master")
-        ),
+            url: "https://github.com/MortenGregersen/Fluxor",
+            .branch("master")),
         .package(
             url: "https://github.com/Flight-School/AnyCodable",
-            from: "0.2.3"
-        ),
+            from: "0.2.3"),
     ],
     targets: [
         .target(

@@ -3,9 +3,9 @@ import Fluxor
 @testable import FluxorExplorerSnapshot
 import XCTest
 
-final class FluxorExplorerSnapshotTests: XCTestCase {
-    let action = TestAction(increment: 1)
-    let otherAction = OtherTestAction()
+class FluxorExplorerSnapshotTests: XCTestCase {
+    private let action = TestAction(increment: 1)
+    private let otherAction = OtherTestAction()
     let oldState = State(count: 1)
     let otherOldState = State(count: 2)
     let newState = State(count: 3)
@@ -37,10 +37,18 @@ final class FluxorExplorerSnapshotTests: XCTestCase {
         XCTAssertFalse(snapshot1 == snapshot2)
     }
 
-    func testInitWithActionAndState() throws {
+    func testInitWithStateAndActionWithPayload() throws {
         let snapshot = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState, date: date)
         XCTAssertEqual(snapshot.actionData.name, "TestAction")
         XCTAssertEqual(snapshot.actionData.payload, ["increment": AnyCodable(action.increment)])
+        XCTAssertEqual(snapshot.oldState, ["count": AnyCodable(oldState.count)])
+        XCTAssertEqual(snapshot.newState, ["count": AnyCodable(newState.count)])
+    }
+    
+    func testInitWithStateAndActionWithoutPayload() throws {
+        let snapshot = FluxorExplorerSnapshot(action: otherAction, oldState: oldState, newState: newState, date: date)
+        XCTAssertEqual(snapshot.actionData.name, "OtherTestAction")
+        XCTAssertEqual(snapshot.actionData.payload, nil)
         XCTAssertEqual(snapshot.oldState, ["count": AnyCodable(oldState.count)])
         XCTAssertEqual(snapshot.newState, ["count": AnyCodable(newState.count)])
     }
@@ -57,13 +65,18 @@ final class FluxorExplorerSnapshotTests: XCTestCase {
         let expectedSnapshot = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState, date: date)
         XCTAssertEqual(snapshot, expectedSnapshot)
     }
+    
+    func testPublicInit() {
+        let snapshot = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState)
+        XCTAssertLessThan(snapshot.date, Date())
+    }
 }
 
-struct TestAction: Action {
+private struct TestAction: Action {
     let increment: Int
 }
 
-struct OtherTestAction: Action {}
+private struct OtherTestAction: Action {}
 
 struct State: Encodable {
     var count = 42
