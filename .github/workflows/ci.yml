@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: macos-latest
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_11.3.1.app/Contents/Developer
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build
+      run: swift build -v
+    - name: Test
+      run: swift test -v --enable-code-coverage
+    - name: Export coverage
+      run: xcrun llvm-cov export -format="lcov" -instr-profile=.build/x86_64-apple-macosx/debug/codecov/default.profdata .build/x86_64-apple-macosx/debug/FluxorExplorerSnapshotPackageTests.xctest/Contents/MacOS/FluxorExplorerSnapshotPackageTests > coverage.lcov
+    - name: Upload coverage
+      uses: paambaati/codeclimate-action@v2.4.0
+      env:
+        CC_TEST_REPORTER_ID: d96cc4d7720fc4ca6ec4a95f3c77b3aa35c440dcfc39a33873b5e6473b95e4f8
+      with:
+        coverageCommand: ls
+        coverageLocations: coverage.lcov:lcov
+        debug: true
+  spm:
+    name: SPM Integration
+    runs-on: macos-latest
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_11.3.1.app/Contents/Developer
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v1
+      - name: SPM Build
+        run: swift build
