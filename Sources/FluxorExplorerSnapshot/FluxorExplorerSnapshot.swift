@@ -1,7 +1,17 @@
+/**
+ * FluxorExplorerSnapshot
+ *  Copyright (c) Morten Bjerg Gregersen 2020
+ *  MIT license, see LICENSE file for details
+ */
+
 import AnyCodable
 import Fluxor
 import Foundation
 
+/**
+ A representation of a dispatched Action, the old state and the new state.
+ To be used by FluxorExplorerInterceptor to send snapshots to FluxorExplorer.
+ */
 public struct FluxorExplorerSnapshot: Codable, Equatable {
     public let actionData: ActionData
     public let oldState: [String: AnyCodable]
@@ -30,6 +40,7 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
         case newState
     }
 
+    /// A `Codable` representation of an `Action` and its payload.
     public struct ActionData: Codable, Equatable {
         public let name: String
         public let payload: [String: AnyCodable]?

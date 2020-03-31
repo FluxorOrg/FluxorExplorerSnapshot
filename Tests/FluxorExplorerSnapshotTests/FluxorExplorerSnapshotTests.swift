@@ -1,3 +1,9 @@
+/**
+ * FluxorExplorerSnapshotTests
+ *  Copyright (c) Morten Bjerg Gregersen 2020
+ *  MIT license, see LICENSE file for details
+ */
+
 import AnyCodable
 import Fluxor
 @testable import FluxorExplorerSnapshot
@@ -44,7 +50,7 @@ class FluxorExplorerSnapshotTests: XCTestCase {
         XCTAssertEqual(snapshot.oldState, ["count": AnyCodable(oldState.count)])
         XCTAssertEqual(snapshot.newState, ["count": AnyCodable(newState.count)])
     }
-    
+
     func testInitWithStateAndActionWithoutPayload() throws {
         let snapshot = FluxorExplorerSnapshot(action: otherAction, oldState: oldState, newState: newState, date: date)
         XCTAssertEqual(snapshot.actionData.name, "OtherTestAction")
@@ -65,7 +71,7 @@ class FluxorExplorerSnapshotTests: XCTestCase {
         let expectedSnapshot = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState, date: date)
         XCTAssertEqual(snapshot, expectedSnapshot)
     }
-    
+
     func testPublicInit() {
         let snapshot = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState)
         XCTAssertLessThan(snapshot.date, Date())
