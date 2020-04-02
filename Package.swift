@@ -18,14 +18,11 @@ let package = Package(
         .package(
             url: "https://github.com/FluxorOrg/Fluxor",
             from: "1.0.0"),
-        .package(
-            url: "https://github.com/Flight-School/AnyCodable",
-            from: "0.2.3"),
     ],
     targets: [
         .target(
             name: "FluxorExplorerSnapshot",
-            dependencies: ["Fluxor", "AnyCodable"]),
+            dependencies: ["Fluxor"]),
         .testTarget(
             name: "FluxorExplorerSnapshotTests",
             dependencies: ["FluxorExplorerSnapshot"]),
