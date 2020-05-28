@@ -18,11 +18,7 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
     public let newState: [String: AnyCodable]
     public internal(set) var date: Date
 
-    public init<State: Encodable>(action: Action, oldState: State, newState: State) {
-        self.init(action: action, oldState: oldState, newState: newState, date: .init())
-    }
-
-    internal init<State: Encodable>(action: Action, oldState: State, newState: State, date: Date) {
+    public init<State: Encodable>(action: Action, oldState: State, newState: State, date: Date = .init()) {
         actionData = .init(action)
         let encoder = JSONEncoder()
         let decoder = JSONDecoder()
