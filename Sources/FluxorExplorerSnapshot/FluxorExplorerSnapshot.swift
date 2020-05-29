@@ -42,13 +42,17 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
         public let payload: [String: AnyCodable]?
 
         public init(_ action: Action) {
-            name = String(describing: type(of: action))
-            if let encodedAction = action.encode(with: JSONEncoder()),
+            if let anonymousAction = action as? IdentifiableAction {
+                name = anonymousAction.id
+            } else {
+                name = String(describing: type(of: action))
+            }
+            let encoder = JSONEncoder()
+            if let encodedAction = action.encode(with: encoder),
                 let decodedPayload = try? JSONDecoder().decode([String: AnyCodable].self, from: encodedAction),
                 decodedPayload.count > 0 {
                 payload = decodedPayload
-            }
-            else {
+            } else {
                 payload = nil
             }
         }
