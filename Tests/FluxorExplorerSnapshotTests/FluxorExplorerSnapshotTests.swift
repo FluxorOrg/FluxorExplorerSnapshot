@@ -78,11 +78,11 @@ class FluxorExplorerSnapshotTests: XCTestCase {
     }
 }
 
-private struct TestAction: Action {
+private struct TestAction: EncodableAction {
     let increment: Int
 }
 
-private struct OtherTestAction: Action {}
+private struct OtherTestAction: EncodableAction {}
 
 struct State: Encodable {
     var count = 42
