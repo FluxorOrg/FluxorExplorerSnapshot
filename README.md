@@ -1,7 +1,7 @@
 # Moved 🚚
 
 **This repository is not updated anymore. It has been merged into the main [FluxorExplorer](https://github.com/FluxorOrg/FluxorExplorer) repository.**
-If you use this library directly, please change the url to [](https://github.com/FluxorOrg/FluxorExplorer/tree/master/FluxorExplorerSnapshot).
+If you use this library directly, please change the url to [https://github.com/FluxorOrg/FluxorExplorer/tree/master/FluxorExplorerSnapshot]().
 
 <hr />
 
