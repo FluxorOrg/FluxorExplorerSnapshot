@@ -22,10 +22,12 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
         actionData = .init(action)
         let encoder = JSONEncoder()
         let decoder = JSONDecoder()
+        // swiftlint:disable force_try
         let encodedOldState = try! encoder.encode(oldState)
         self.oldState = try! decoder.decode([String: AnyCodable].self, from: encodedOldState)
         let encodedNewState = try! encoder.encode(newState)
         self.newState = try! decoder.decode([String: AnyCodable].self, from: encodedNewState)
+        // swiftlint:enable force_try
         self.date = date
     }
 
@@ -43,13 +45,13 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
 
         public init(_ action: Action) {
             name = String(describing: type(of: action))
-            if let encodedAction = action.encode(with: JSONEncoder()),
-                let decodedPayload = try? JSONDecoder().decode([String: AnyCodable].self, from: encodedAction),
-                decodedPayload.count > 0 {
+            if let encodableAction = action as? EncodableAction,
+               let encodedAction = encodableAction.encode(with: JSONEncoder()),
+               let decodedPayload = try? JSONDecoder().decode([String: AnyCodable].self, from: encodedAction),
+               decodedPayload.count > 0 {
                 payload = decodedPayload
-            }
-            else {
-                payload = nil
+            } else {
+                payload = ["error": "Action is not encodable and couldn't be encoded."]
             }
         }
     }

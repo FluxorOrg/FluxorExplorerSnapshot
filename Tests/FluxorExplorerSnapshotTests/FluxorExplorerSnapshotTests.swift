@@ -17,6 +17,7 @@ class FluxorExplorerSnapshotTests: XCTestCase {
     let newState = State(count: 3)
     let otherNewState = State(count: 4)
     let date = Date(timeIntervalSince1970: 1576706397)
+    // swiftlint:disable:next line_length
     let json = #"{"action":{"name":"TestAction","payload":{"increment":1}},"newState":{"count":3},"oldState":{"count":1},"date":598399197}"#
 
     func testEqual() throws {
@@ -54,7 +55,7 @@ class FluxorExplorerSnapshotTests: XCTestCase {
     func testInitWithStateAndActionWithoutPayload() throws {
         let snapshot = FluxorExplorerSnapshot(action: otherAction, oldState: oldState, newState: newState, date: date)
         XCTAssertEqual(snapshot.actionData.name, "OtherTestAction")
-        XCTAssertEqual(snapshot.actionData.payload, nil)
+        XCTAssertEqual(snapshot.actionData.payload, ["error": "Action is not encodable and couldn't be encoded."])
         XCTAssertEqual(snapshot.oldState, ["count": AnyCodable(oldState.count)])
         XCTAssertEqual(snapshot.newState, ["count": AnyCodable(newState.count)])
     }
@@ -66,10 +67,10 @@ class FluxorExplorerSnapshotTests: XCTestCase {
     }
 
     func testDecode() throws {
+        let snapshot = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState, date: date)
         let data = json.data(using: .utf8)!
-        let snapshot = try JSONDecoder().decode(FluxorExplorerSnapshot.self, from: data)
-        let expectedSnapshot = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState, date: date)
-        XCTAssertEqual(snapshot, expectedSnapshot)
+        let decodedSnapshot = try JSONDecoder().decode(FluxorExplorerSnapshot.self, from: data)
+        XCTAssertEqual(snapshot, decodedSnapshot)
     }
 
     func testPublicInit() {
@@ -78,7 +79,7 @@ class FluxorExplorerSnapshotTests: XCTestCase {
     }
 }
 
-private struct TestAction: Action {
+private struct TestAction: EncodableAction {
     let increment: Int
 }
 
