@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.3
 
 import PackageDescription
 
@@ -17,7 +17,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/FluxorOrg/Fluxor",
-            from: "3.0.0"),
+            from: "4.0.0"),
     ],
     targets: [
         .target(
@@ -25,6 +25,6 @@ let package = Package(
             dependencies: ["Fluxor"]),
         .testTarget(
             name: "FluxorExplorerSnapshotTests",
-            dependencies: ["FluxorExplorerSnapshot"]),
+            dependencies: ["Fluxor", "FluxorExplorerSnapshot"]),
     ]
 )
