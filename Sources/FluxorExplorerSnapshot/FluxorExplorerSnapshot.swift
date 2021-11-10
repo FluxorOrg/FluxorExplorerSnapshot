@@ -51,7 +51,7 @@ public struct FluxorExplorerSnapshot: Codable, Equatable {
                decodedPayload.count > 0 {
                 payload = decodedPayload
             } else {
-                payload = ["error": "Action is not encodable and couldn't be encoded."]
+                payload = ["error": AnyCodable("Action is not encodable and couldn't be encoded.")]
             }
         }
     }
