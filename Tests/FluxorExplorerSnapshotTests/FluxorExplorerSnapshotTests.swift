@@ -55,7 +55,8 @@ class FluxorExplorerSnapshotTests: XCTestCase {
     func testInitWithStateAndActionWithoutPayload() throws {
         let snapshot = FluxorExplorerSnapshot(action: otherAction, oldState: oldState, newState: newState, date: date)
         XCTAssertEqual(snapshot.actionData.name, "OtherTestAction")
-        XCTAssertEqual(snapshot.actionData.payload, ["error": "Action is not encodable and couldn't be encoded."])
+        XCTAssertEqual(snapshot.actionData.payload,
+                       ["error": AnyCodable("Action is not encodable and couldn't be encoded.")])
         XCTAssertEqual(snapshot.oldState, ["count": AnyCodable(oldState.count)])
         XCTAssertEqual(snapshot.newState, ["count": AnyCodable(newState.count)])
     }
