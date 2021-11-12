@@ -10,7 +10,7 @@ import Fluxor
 import XCTest
 
 class FluxorExplorerSnapshotTests: XCTestCase {
-    private let action = TestAction(increment: 1)
+    private let action = TestAction(increment: 1, userInfo: ["things": ["nothing", "something", "anything"]])
     private let otherAction = OtherTestAction()
     let oldState = State(count: 1)
     let otherOldState = State(count: 2)
@@ -18,12 +18,12 @@ class FluxorExplorerSnapshotTests: XCTestCase {
     let otherNewState = State(count: 4)
     let date = Date(timeIntervalSince1970: 1576706397)
     // swiftlint:disable:next line_length
-    let json = #"{"action":{"name":"TestAction","payload":{"increment":1}},"newState":{"count":3},"oldState":{"count":1},"date":598399197}"#
+    let json = #"{"action":{"name":"TestAction","payload":{"userInfo":{"things":["nothing","something","anything"]},"increment":1}},"newState":{"count":3},"oldState":{"count":1},"date":598399197}"#
 
     func testEqual() throws {
         let snapshot1 = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState, date: date)
         let snapshot2 = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState, date: date)
-        XCTAssertTrue(snapshot1 == snapshot2)
+        XCTAssertEqual(snapshot1, snapshot2)
     }
 
     func testNotEqualByAction() throws {
@@ -47,7 +47,9 @@ class FluxorExplorerSnapshotTests: XCTestCase {
     func testInitWithStateAndActionWithPayload() throws {
         let snapshot = FluxorExplorerSnapshot(action: action, oldState: oldState, newState: newState, date: date)
         XCTAssertEqual(snapshot.actionData.name, "TestAction")
-        XCTAssertEqual(snapshot.actionData.payload, ["increment": AnyCodable(action.increment)])
+        XCTAssertEqual(snapshot.actionData.payload,
+                       ["userInfo": AnyCodable(["things": ["nothing", "something", "anything"]]),
+                        "increment": AnyCodable(action.increment)])
         XCTAssertEqual(snapshot.oldState, ["count": AnyCodable(oldState.count)])
         XCTAssertEqual(snapshot.newState, ["count": AnyCodable(newState.count)])
     }
@@ -82,6 +84,7 @@ class FluxorExplorerSnapshotTests: XCTestCase {
 
 private struct TestAction: EncodableAction {
     let increment: Int
+    let userInfo: [String: [String]]
 }
 
 private struct OtherTestAction: Action {}
